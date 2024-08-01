@@ -1,0 +1,23 @@
+.header {
+    width: 100%;
+    background-color: black; /* Android green color */
+    color: #95cf00;
+    text-align: center;
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Major Mono Display', sans-serif;
+  }
+  
+  .header h1 {
+    margin: 0;
+    margin-left: 10px;
+  }
+  
+  .header .logo {
+    width: 40px;
+    height: 40px;
+    margin-left: 20px;
+  }
+  

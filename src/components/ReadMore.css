@@ -1,0 +1,7 @@
+.read-more-link {
+    color: rgb(0, 140, 255);
+    cursor: pointer;
+    text-decoration: underline;
+    display: inline; /* Ensure the link is inline */
+  }
+  

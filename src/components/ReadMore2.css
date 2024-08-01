@@ -1,0 +1,14 @@
+.read-more-list {
+    list-style-type: disc; /* Use disc bullets */
+    margin: 0;
+    padding-left: 10px; /* Add some padding to the left */
+  }
+  
+  .read-more-item {
+    margin-bottom: 8px; /* Add some space between items */
+    word-wrap: break-word; /* Ensure long words break to the next line */
+    overflow-wrap: break-word; /* Ensure long words break to the next line */
+    white-space: pre-wrap; /* Preserve whitespace and wrap as needed */
+    line-height: 1.5; /* Improve readability */
+  }
+  
