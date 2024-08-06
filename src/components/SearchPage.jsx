@@ -15,13 +15,13 @@ const SearchPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
-    const prevQueryRef = useRef();
-    const prevPageRef = useRef();
+    const prevParamsRef = useRef();
     const limit = 20; // Fixed limit value
   
     const handleSearchResults = (results, totalCount) => {
       setTotalCount(totalCount);
       setSearchResults(results);
+      console.log(results)
       setTotalPages(Math.ceil(totalCount / limit)); 
       setSearchExecuted(true); // Set flag to indicate search has been executed
       setIsLoading(false); // Stop loading after data is fetched
@@ -33,48 +33,59 @@ const SearchPage = () => {
       setCurrentPage(page);
       setSearchParams({
         query: searchParams.get('query') || '',
+        package_name: searchParams.get('package_name') || '',
+        developer_name: searchParams.get('developer_name') || '',
+        categories: searchParams.get('categories') || '',
+        downloadable: searchParams.get('downloadable') || 'true',
         page: page
       });
     };
   
     const handleLoading = (loading) => {
-      setIsLoading(loading);
-      setSearchInitiated(true);
-      setSearchExecuted(false)
+        setSearchResults([]);
+        setIsLoading(loading);
+        setSearchInitiated(true);
+        setSearchExecuted(false);
     };
   
-    const handleSearch = async (query, page) => {
-      handleLoading(true);
-      try {
-        // console.log("from app.js")
-        const response = await axios.get(`http://localhost:8000/api/search`, {
-          params: { query, page, limit }
-        });
-        handleSearchResults(response.data, parseInt(response.headers['x-total-count'])); // Adjust according to your API response
-      } catch (error) {
-        console.error('Error fetching search results:', error);
-      } finally {
-        setIsLoading(false);
-      }
+    const handleSearch = async (params) => {
+        handleLoading(true);
+        console.log('Initiated searching ...')
+        try {
+          const response = await axios.get('http://localhost:8000/api/search', {
+            params: { ...params, limit }
+          });
+          console.log('Fetched search results ...')
+          handleSearchResults(response.data, parseInt(response.headers['x-total-count'])); // Adjust according to your API response
+        } catch (error) {
+          console.error('Error fetching search results:', error);
+        } finally {
+          setIsLoading(false);
+        }
     };
+    
   
     useEffect(() => {
-      const query = searchParams.get('query');
-      const page = parseInt(searchParams.get('page')) || 1;
-  
-      if (prevQueryRef.current !== query || prevPageRef.current !== page) {
-        prevQueryRef.current = query;
-        prevPageRef.current = page;
-        if (query) {
-          handleSearch(query, page);
-        } else {
-          setSearchExecuted(false);
-          setSearchInitiated(false);
-          setIsLoading(false);
-          setSearchResults([]);
+        const params = {
+          query: searchParams.get('query') || '',
+          package_name: searchParams.get('package_name') || '',
+          developer_name: searchParams.get('developer_name') || '',
+          categories: searchParams.get('categories') || '',
+          downloadable: searchParams.get('downloadable') || 'true',
+          page: parseInt(searchParams.get('page')) || 1
+        };
+        if (JSON.stringify(prevParamsRef.current) !== JSON.stringify(params)) {
+          prevParamsRef.current = params;
+          if (params.query || params.package_name || params.developer_name || params.categories) {
+            handleSearch(params);
+          } else {
+            setSearchExecuted(false);
+            setSearchInitiated(false);
+            setIsLoading(false);
+            setSearchResults([]);
+          }
         }
-      }
-    }, [searchParams]);
+      }, [searchParams]);
   
     return (
       <Container component="main" sx={{ flex: 1, py: 2 }}>

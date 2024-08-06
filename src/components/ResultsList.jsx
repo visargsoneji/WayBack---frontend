@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Grid, Accordion, AccordionSummary, AccordionDetails, Typography, Skeleton } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from '@mui/system';
-import 'react-vertical-timeline-component/style.min.css';
 import axios from 'axios';
 import './ResultsList.css';
 import AppTimeline from './AppTimeline';
