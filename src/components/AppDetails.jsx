@@ -51,7 +51,7 @@ const AppDetails = () => {
     if (appId) {
       fetchData();
     }
-  }, [appId]);
+  }, );
 
   if (loading) {
     return (

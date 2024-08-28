@@ -21,7 +21,6 @@ const SearchPage = () => {
     const handleSearchResults = (results, totalCount) => {
       setTotalCount(totalCount);
       setSearchResults(results);
-      console.log(results)
       setTotalPages(Math.ceil(totalCount / limit)); 
       setSearchExecuted(true); // Set flag to indicate search has been executed
       setIsLoading(false); // Stop loading after data is fetched

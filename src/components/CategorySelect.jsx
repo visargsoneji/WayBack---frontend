@@ -21,6 +21,7 @@ const CategorySelect = ({ selectedCategories, setSelectedCategories }) => {
 
   return (
     <Autocomplete
+      id='categorySelect'
       multiple
       style={{
         width: '300px',

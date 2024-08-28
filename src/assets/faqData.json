@@ -1,23 +1,26 @@
 [
-    {
-      "question": "What is WayBack APK?",
-      "answer": "WayBack APK is a service that allows users to search and retrieve historical versions of Android APK files."
-    },
-    {
-      "question": "How do I search for APKs?",
-      "answer": "You can use the search bar on the Search page to look for APKs by name or package name."
-    },
-    {
-      "question": "Can I download APKs directly?",
-      "answer": "Yes, you can download available versions of APKs directly from the search results."
-    },
-    {
-      "question": "Is there a limit to the number of searches?",
-      "answer": "No, there is no limit to the number of searches you can perform."
-    },
-    {
-      "question": "How do I contact support?",
-      "answer": "You can contact support by clicking on the Profile icon and selecting the Contact Us option."
-    }
-  ]
-  
+  {
+    "question": "How can I access APKs on WayBack APK?",
+    "answer": "To access APKs on WayBack APK, you need to be a registered and \"approved\" user. For downloading APKs, once you are registered, contact us at sefcom@asu.edu with your registered e-mail and usecase."
+  },
+  {
+    "question": "How does the search bar work, and what do each of its fields mean?",
+    "answer": "The search bar on WayBack APK allows you to perform targeted searches to find specific APK versions. Here’s how each field works:\n\n- APK Name: Enter the name of the Android application you are looking for. This field is useful for general searches if you are not sure about the exact package name.\n- Package Name: Enter the unique package name (e.g., com.example.app) associated with the Android app. This provides a more accurate search result and is recommended if you know the package name.\n- Developer Name: This field allows you to filter APKs by the developer's name. This is particularly useful if you are looking for applications developed by a specific developer or organization.\n- Categories: You can select multiple categories to narrow down the search results to specific types of apps, such as games, productivity, etc.\n- Downloadable: This toggle switch allows you to filter search results to only show APKs that are available for download. Enable this switch if you are specifically looking to download APKs.\n\nOnce you have filled in the desired fields, click on the 'Search APKs' button to retrieve the results based on your criteria."
+  },
+  {
+    "question": "How should I interpret the search results on WayBack APK?",
+    "answer": "The search results on WayBack APK provide a detailed view of the available APK versions matching your search criteria. Each result includes:\n\n- Version Number: This indicates the version of the APK. Clicking on a version will show you more details about it.\n- Rating and Total Ratings: This shows the user rating and the total number of ratings that the version has received. This can help you gauge the popularity or reliability of a particular version.\n- Size: The file size of the APK. This can be useful to know if you are concerned about storage space or data usage.\n- Permissions: A list of permissions that the app requests. This is crucial for understanding the security and privacy implications of installing that version.\n- Download Button: If the APK is available for download and you have the necessary permissions, a download button will be visible. Click it to start downloading the APK file.\n\nYou can click on any specific result to see more detailed information or directly download the APK if it's available."
+  },
+  {
+    "question": "What should I do if I cannot find a specific APK version?",
+    "answer": "If you cannot find a specific APK version, it could be due to several reasons:\n\n- The APK version may not have been archived or collected yet.\n- Your search criteria may be too narrow. Try broadening the search by removing some filters.\n- Ensure you have the correct spelling for the APK name or package name.\n\nIf you still cannot find the APK version you're looking for, you can contact our support team for further assistance."
+  },
+  {
+    "question": "How do I understand the permissions requested by an APK?",
+    "answer": "Each APK version listed in the search results includes a section on permissions. Permissions indicate what access the app requires on your device (e.g., camera, contacts, storage). It's important to review these permissions carefully to understand the potential security and privacy implications. If an APK requests permissions that seem unnecessary for its functionality, it may be a red flag, and you should consider whether or not to install it."
+  },
+  {
+    "question": "What should I do if I face issues with downloading or accessing APKs?",
+    "answer": "If you face any issues while downloading or accessing APKs, make sure you are logged in and have the necessary permissions. Check if your account has the required access level by visiting the profile section. If the problem persists, clear your browser cache and cookies, or try accessing the site from a different browser. For further assistance, you can contact our support team through the 'Contact Us' link found in the header or footer of the website."
+  }
+]

@@ -1,6 +1,6 @@
 // src/components/AppDetails.jsx
-import React from 'react';
-import { Container, Typography, Grid, Divider } from '@mui/material';
+import React, { useState } from 'react';
+import { Container, Typography, Grid, Divider, CircularProgress } from '@mui/material';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import CustomIcon from '../assets/android-color.svg';
@@ -8,11 +8,68 @@ import ReadMore from './ReadMore';
 import ReadMore2 from './ReadMore2';
 import './ResultsList.css';
 import shareIcon from '../assets/share.svg'
+import downloadIcon from '../assets/download.svg'
 
 const AppTimeline = ({ details, versions }) => {
+  const [downloading, setDownloading] = useState({})
+
+  // const handleDownload = (hash) => {
+  //   const downloadUrl = `http://localhost:8000/api/download/${hash}`;
+  //   const link = document.createElement('a');
+  //   link.href = downloadUrl;
+  //   link.setAttribute('download', hash); // Ensure the filename is set correctly
+  //   link.click();
+  // };
+  const handleDownload = (hash) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('You need to login and check the FAQs to download the file');
+      return;
+    }
+    
+    const downloadUrl = `http://localhost:8000/api/download/${hash}`;
+    fetch(downloadUrl, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }).then(response => {
+      if (response.status === 200) {
+        console.log('received the OK response')
+        setDownloading((prevState) => ({ ...prevState, [hash]: true }));
+        return response.blob();
+      } else {
+        return response.json().then(errorData => {
+          throw new Error(errorData.detail);
+        });
+      }
+    }).then(blob => {
+      setDownloading((prevState) => ({ ...prevState, [hash]: false }));
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', hash);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+    }).catch(error => {
+      setDownloading((prevState) => ({ ...prevState, [hash]: false }));
+      console.log(error)
+      if (error.message === 'Token expired') {
+        alert('Session expired. Please log in again.');
+        localStorage.removeItem('token');  // Clear the expired token
+        window.location.href = '/login';  // Redirect to login page
+      } else {
+        console.error('Error downloading the file:', hash);
+        console.error('Failed with msg: ', error.message)
+        alert(error.message || 'Error downloading the file. Please try again later.');
+      }
+      
+    });
+  };
+
   if (!details) {
     return <Typography>No details found</Typography>;
-  }
+  } 
 
   return (
     <Container style={{ width: '100%' }}>
@@ -71,7 +128,18 @@ const AppTimeline = ({ details, versions }) => {
                   <Divider orientation="vertical" flexItem style={{ margin: "5px" }} />
                   <Grid item xs={3.6}>
                     <Typography sx={{ fontFamily: "Ubuntu" }} style={{ fontSize: "10px" }}>DOWNLOAD</Typography>
-                    <Typography sx={{ fontFamily: "Ubuntu" }}><strong>{version.hash.substring(0, 5)}</strong></Typography>
+                    {downloading[version.hash] ? (
+                       <CircularProgress sx={{color:'black'}} size={30}/>
+                    ) : (
+                      <Typography sx={{ fontFamily: "Ubuntu" }} variant="body1">
+                        <img 
+                          src={downloadIcon} 
+                          alt="Download Icon" 
+                          style={{ width: '30px', height: '30px', cursor: 'pointer' }} 
+                          onClick={() => handleDownload(version.hash)}
+                        />
+                      </Typography> 
+                    )}
                   </Grid>
                 </Grid>
                 <Divider />
