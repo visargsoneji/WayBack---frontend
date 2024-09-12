@@ -217,13 +217,13 @@ const Header = ({isLoggedIn, setIsLoggedIn}) => {
   };
 
   const handleLoginClick = () => {
+    localStorage.setItem('lastVisitedPage', window.location.href);
     navigate('/login');
   };
 
   const handleLogoutClick = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
-    navigate('/')
   };
 
   return (

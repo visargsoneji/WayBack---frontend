@@ -18,7 +18,7 @@ const FAQ = () => {
         {faqData.map((faq, index) => (
           <Accordion key={index}>
             <AccordionSummary
-              expandIcon={<ExpandMoreIcon sx={{ color: '#95cf00' }} />}
+              expandIcon={<ExpandMoreIcon/>}
               aria-controls={`panel${index}-content`}
               id={`panel${index}-header`}
             >

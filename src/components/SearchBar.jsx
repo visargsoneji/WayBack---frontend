@@ -120,11 +120,11 @@ import Joyride, { STATUS } from 'react-joyride';
 const CategorySelect = lazy(() => import('./CategorySelect'));
 
 const SearchBar = ({ setCurrentPage, setSearchParams, searchParams }) => {
-  const [query, setQuery] = useState('');
-  const [packageName, setPackageName] = useState('');
-  const [developerName, setDeveloperName] = useState('');
-  const [categories, setCategories] = useState([]);
-  const [downloadable, setDownloadable] = useState(true);
+  const [query, setQuery] = useState(searchParams.get('query') || '');
+  const [packageName, setPackageName] = useState(searchParams.get('package_name') || '');
+  const [developerName, setDeveloperName] = useState(searchParams.get('developer_name') || '');
+  const [categories, setCategories] = useState(searchParams.get('categories') ? searchParams.get('categories').split(',') : []);
+  const [downloadable, setDownloadable] = useState(searchParams.get('downloadable') === 'false' ? false : true);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [runTour, setRunTour] = useState(true);
 
@@ -141,38 +141,13 @@ const SearchBar = ({ setCurrentPage, setSearchParams, searchParams }) => {
   }, []);
 
   const steps = [
-    // {
-    //   target: '#query',
-    //   content: 'Enter the APK name here to search for Android APKs.',
-    //   spotlightPadding: 5, // Increases the padding around the spotlight to highlight the entire input
-    // },
-    // {
-    //   target: '#packageName',
-    //   content: 'Enter the package name if you want to narrow your search further.',
-    //   spotlightPadding: 5,
-    // },
     {
       target: '#expand-advanced-search',
       content: 'Click here to reveal Advanced Search options!',
       spotlightPadding: 5,
       disableBeacon: true, // This prevents the dot indicator from appearing
       spotlightClicks: true, // Requires a click to advance the tour
-    },
-    // {
-    //   target: '#developerName',
-    //   content: 'Enter the developer name to search for APKs by a specific developer.',
-    //   spotlightPadding: 5,
-    // },
-    // {
-    //   target: '#categorySelect',
-    //   content: 'Select one or more categories to filter your search.',
-    //   spotlightPadding: 5,
-    // },
-    // {
-    //   target: '#downloadable-switch',
-    //   content: 'Toggle this switch to filter APKs that are downloadable.',
-    //   spotlightPadding: 5,
-    // }
+    }
   ];
 
   const handleInputChange = (e) => {
@@ -312,6 +287,7 @@ const SearchBar = ({ setCurrentPage, setSearchParams, searchParams }) => {
             mt: isSmallScreen ? 2 : 0,
             backgroundColor: '#95cf00',
             color: '#fff',
+            '&:hover': { backgroundColor: '#7fbf00' }
           }}
         >
           Search APKs

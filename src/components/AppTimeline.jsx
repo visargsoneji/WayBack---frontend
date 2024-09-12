@@ -9,63 +9,44 @@ import ReadMore2 from './ReadMore2';
 import './ResultsList.css';
 import shareIcon from '../assets/share.svg'
 import downloadIcon from '../assets/download.svg'
+import { generateDownloadURL } from '../api/app/endpoints';
 
 const AppTimeline = ({ details, versions }) => {
   const [downloading, setDownloading] = useState({})
 
-  // const handleDownload = (hash) => {
-  //   const downloadUrl = `http://localhost:8000/api/download/${hash}`;
-  //   const link = document.createElement('a');
-  //   link.href = downloadUrl;
-  //   link.setAttribute('download', hash); // Ensure the filename is set correctly
-  //   link.click();
-  // };
-  const handleDownload = (hash) => {
+  const handleDownload = async (hash) => {
     const token = localStorage.getItem('token');
     if (!token) {
       alert('You need to login and check the FAQs to download the file');
       return;
     }
-    
-    const downloadUrl = `http://localhost:8000/api/download/${hash}`;
-    fetch(downloadUrl, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    }).then(response => {
-      if (response.status === 200) {
-        console.log('received the OK response')
-        setDownloading((prevState) => ({ ...prevState, [hash]: true }));
-        return response.blob();
-      } else {
-        return response.json().then(errorData => {
-          throw new Error(errorData.detail);
-        });
-      }
-    }).then(blob => {
-      setDownloading((prevState) => ({ ...prevState, [hash]: false }));
-      const url = window.URL.createObjectURL(blob);
+    setDownloading((prevState) => ({ ...prevState, [hash]: true }));
+    try {
+      // Step 1: Get the pre-signed download URL from the backend 
+      const downloadUrl = await generateDownloadURL(hash) // The pre-signed URL from the backend
+      // Step 2: Use the pre-signed URL for the download link
       const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', hash);
+      link.href = downloadUrl;
+      link.setAttribute('download', hash); // Set the filename for the download
       document.body.appendChild(link);
-      link.click();
-      link.parentNode.removeChild(link);
-    }).catch(error => {
-      setDownloading((prevState) => ({ ...prevState, [hash]: false }));
-      console.log(error)
-      if (error.message === 'Token expired') {
+      link.click(); // Trigger the download
+      link.parentNode.removeChild(link); // Cleanup
+  
+    } catch (error) {
+      if (error.response.data.detail === 'Token expired') {
         alert('Session expired. Please log in again.');
         localStorage.removeItem('token');  // Clear the expired token
+        localStorage.setItem('lastVisitedPage', window.location.href);
         window.location.href = '/login';  // Redirect to login page
       } else {
-        console.error('Error downloading the file:', hash);
-        console.error('Failed with msg: ', error.message)
-        alert(error.message || 'Error downloading the file. Please try again later.');
+        console.error('Error generating download URL:', error);
+        alert(error.response.data.detail || 'Error generating download URL. Please try again later.');
       }
-      
-    });
+    } finally {
+      setDownloading((prevState) => ({ ...prevState, [hash]: false }));
+    }
   };
+  
 
   if (!details) {
     return <Typography>No details found</Typography>;
@@ -93,7 +74,7 @@ const AppTimeline = ({ details, versions }) => {
         <Grid item xs={3.6}>
           {/* <Typography sx={{ fontFamily: "Ubuntu", fontSize: "12px" }}>SHARE WITH FRIENDS</Typography> */}
           <Typography sx={{ fontFamily: "Ubuntu" }} variant="body1">
-            <a href={`/search/details?app_id=${details.app_id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <a href={`/search/details?app_id=${details.app_id}`} target="_blank" rel="noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
             <img src={shareIcon} alt="Share Icon" style={{ width: '30px', height: '30px'}} />
             </a>
           </Typography>
@@ -129,7 +110,7 @@ const AppTimeline = ({ details, versions }) => {
                   <Grid item xs={3.6}>
                     <Typography sx={{ fontFamily: "Ubuntu" }} style={{ fontSize: "10px" }}>DOWNLOAD</Typography>
                     {downloading[version.hash] ? (
-                       <CircularProgress sx={{color:'black'}} size={30}/>
+                       <CircularProgress sx={{color:'black'}} size={34}/>
                     ) : (
                       <Typography sx={{ fontFamily: "Ubuntu" }} variant="body1">
                         <img 

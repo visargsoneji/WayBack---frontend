@@ -1,8 +1,7 @@
 // src/components/Login.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Box, TextField, Button, Link, Typography, Container } from '@mui/material';
-import axios from 'axios';
+import { login, register } from '../api/user/endpoints'
 
 const Login = ({ setIsLoggedIn }) => {
   const [email, setEmail] = useState('');
@@ -12,7 +11,6 @@ const Login = ({ setIsLoggedIn }) => {
   const [lastName, setLastName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
-  const navigate = useNavigate();
 
   const validateEmail = (email) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -37,15 +35,14 @@ const Login = ({ setIsLoggedIn }) => {
     if (Object.keys(errors).length === 0) {
       // Implement the login logic here
       try {
-        const response = await axios.post('http://localhost:8000/api/login', {
-          email,
-          password
-        });
-        localStorage.setItem('token', response.data.access_token);
+        const data = await login(email, password);
+        localStorage.setItem('token', data.access_token);
         setIsLoggedIn(true);
-        navigate('/search');
+        const lastVisitedPage = localStorage.getItem('lastVisitedPage') || '/search';    
+        window.location.href = lastVisitedPage;
+        localStorage.removeItem('lastVisitedPage');
       } catch (error) {
-        console.error('Error registering user:', error);
+        console.error('Error in login user:', error);
         alert(error.response.data.detail)
       }
       
@@ -83,12 +80,7 @@ const Login = ({ setIsLoggedIn }) => {
     if (Object.keys(errors).length === 0) {
       // Implement the registration logic here
       try {
-        const response = await axios.post('http://localhost:8000/api/register', {
-          email,
-          first_name: firstName,
-          last_name: lastName,
-          password
-        });
+        await register(email, firstName, lastName, password)
         alert('User registered successfully');
       } catch (error) {
         console.error('Error registering user:', error);
@@ -188,7 +180,7 @@ const Login = ({ setIsLoggedIn }) => {
           <Button
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2, backgroundColor: '#95cf00', color: '#fff' }}
+            sx={{ mt: 3, mb: 2, backgroundColor: '#95cf00', color: '#fff' , '&:hover': { backgroundColor: '#7fbf00' }}}
             onClick={isRegistering ? handleRegister : handleLogin}
           >
             {isRegistering ? 'Register' : 'Login'}

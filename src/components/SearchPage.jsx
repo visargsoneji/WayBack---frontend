@@ -4,7 +4,7 @@ import { Box, Container, Typography } from '@mui/material';
 import ResultsList from './ResultsList';
 import PaginationComponent from './PaginationComponent';
 import SearchBar from './SearchBar';
-import axios from 'axios';
+import { getSearchResults } from '../api/app/endpoints'
 
 const SearchPage = () => {
     const [searchResults, setSearchResults] = useState([]);
@@ -51,11 +51,13 @@ const SearchPage = () => {
         handleLoading(true);
         console.log('Initiated searching ...')
         try {
-          const response = await axios.get('http://localhost:8000/api/search', {
-            params: { ...params, limit }
-          });
-          console.log('Fetched search results ...')
-          handleSearchResults(response.data, parseInt(response.headers['x-total-count'])); // Adjust according to your API response
+          const { searchResults, totalResults } = await getSearchResults(params, limit);
+          handleSearchResults(searchResults, totalResults);
+          // const response = await axios.get('http://localhost:8000/api/search', {
+          //   params: { ...params, limit }
+          // });
+          // handleSearchResults(response.data, parseInt(response.headers['x-total-count']));
+           // Adjust according to your API response
         } catch (error) {
           console.error('Error fetching search results:', error);
         } finally {
@@ -91,6 +93,7 @@ const SearchPage = () => {
         <SearchBar
           setCurrentPage={setCurrentPage}
           setSearchParams={setSearchParams}
+          searchParams={searchParams}
         />
         {searchInitiated && (
           <>

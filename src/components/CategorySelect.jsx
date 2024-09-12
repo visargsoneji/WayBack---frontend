@@ -1,7 +1,7 @@
 // src/components/CategorySelect.jsx
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Autocomplete, TextField, Chip } from '@mui/material';
+import { getCategories } from '../api/app/endpoints';
 
 const CategorySelect = ({ selectedCategories, setSelectedCategories }) => {
   const [categories, setCategories] = useState([]);
@@ -9,8 +9,8 @@ const CategorySelect = ({ selectedCategories, setSelectedCategories }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/categories');
-        setCategories(response.data);
+        const fetchedCategories = await getCategories();
+        setCategories(fetchedCategories);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }

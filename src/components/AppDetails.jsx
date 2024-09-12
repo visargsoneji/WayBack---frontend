@@ -1,7 +1,6 @@
 // src/components/AppDetailsPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
 import AppTimeline from './AppTimeline';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -9,6 +8,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Skeleton, Typography } from '@mui/material';
 import { styled } from '@mui/system';
+import { getAppDetails, getVersionDetails } from '../api/app/endpoints';
 
 const CustomAccordionSummary = styled(AccordionSummary)({
   backgroundColor: '#95cf00', // Custom color
@@ -32,13 +32,13 @@ const AppDetails = () => {
       setLoading(true);
       try {
         if (!details){
-          const responseDetails = await axios.get(`http://localhost:8000/api/details/${appId}`);
-          setDetails(responseDetails.data);
+          const appDetails = await getAppDetails(appId);
+          setDetails(appDetails);
         }
         
         if(!versions){
-          const responseVersions = await axios.get(`http://localhost:8000/api/version-details/${appId}`);
-          setVersions(responseVersions.data);
+          const versionDetails = await getVersionDetails(appId);
+          setVersions(versionDetails);
         }
         
       } catch (error) {
@@ -51,7 +51,7 @@ const AppDetails = () => {
     if (appId) {
       fetchData();
     }
-  }, );
+  });
 
   if (loading) {
     return (

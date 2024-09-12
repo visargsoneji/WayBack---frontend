@@ -2,16 +2,18 @@ import React, { useState } from 'react';
 import { Grid, Accordion, AccordionSummary, AccordionDetails, Typography, Skeleton } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from '@mui/system';
-import axios from 'axios';
 import './ResultsList.css';
 import AppTimeline from './AppTimeline';
+import { getAppDetails, getVersionDetails } from '../api/app/endpoints';
 
+const bgcolors = ['#95cf00']; // #466100
+const colors = ['#000000'];
 
-const CustomAccordionSummary = styled(AccordionSummary)({
-  backgroundColor: '#95cf00', // Custom color
-  color: 'black',
-  width: '100%'
-});
+const CustomAccordionSummary = styled(AccordionSummary)(({ bgcolor, color }) => ({
+  backgroundColor: bgcolor,
+  color: color,
+  width: '100%',
+}));
 
 const ResultsList = ({ results, isLoading }) => {
   const [details, setDetails] = useState({});
@@ -27,18 +29,18 @@ const ResultsList = ({ results, isLoading }) => {
 
     try {
       if (!details[appId]) {
-        const responseDetails = await axios.get(`http://localhost:8000/api/details/${appId}`);
+        const appDetails = await getAppDetails(appId);
         setDetails((prevDetails) => ({
           ...prevDetails,
-          [appId]: responseDetails.data,
+          [appId]: appDetails,
         }));
       }
 
       if (!versions[appId]) {
-        const responseVersions = await axios.get(`http://localhost:8000/api/version-details/${appId}`);
+        const versionDetails = await getVersionDetails(appId);
         setVersions((prevVersions) => ({
           ...prevVersions,
-          [appId]: responseVersions.data,
+          [appId]: versionDetails,
         }));
       }
     } catch (error) {
@@ -64,9 +66,9 @@ const ResultsList = ({ results, isLoading }) => {
 
   return (
     <div className="results-list">
-      {results.map((result) => (
+      {results.map((result, index) => (
         <Accordion key={result.id} onChange={() => handleAccordionChange(result.app_id)}>
-          <CustomAccordionSummary expandIcon={<ExpandMoreIcon style={{ color: "#fff" }} />}>
+          <CustomAccordionSummary expandIcon={<ExpandMoreIcon/>} bgcolor={bgcolors[index % bgcolors.length]} color={colors[index % colors.length]}>
             <Typography sx={{ fontFamily: "Ubuntu", fontSize: "19px"}}><strong>{result.name} </strong>- {result.package_name}</Typography>
           </CustomAccordionSummary>
           <AccordionDetails>
