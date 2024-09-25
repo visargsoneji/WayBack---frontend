@@ -1,5 +1,5 @@
 import apiClient from '../index';
-
+import { backendUrl } from '../index';
 
 export const getSearchResults = async (params, limit) => {
   try {
@@ -46,5 +46,5 @@ export const getCategories = async () => {
 export const generateDownloadURL = async(hash) => {
   const response = await apiClient.get(`/api/generate-download-url/${hash}`)
 
-  return response.data.url;
+  return backendUrl + response.data.url;
 }
