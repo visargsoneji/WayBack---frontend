@@ -43,6 +43,26 @@ export const getCategories = async () => {
     }
 };
 
+export const getMaturityLevels = async () => {
+  try {
+    const response = await apiClient.get('/api/maturity');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching maturity:', error);
+    throw error;
+  }
+};
+
+export const getPermissions = async () => {
+  try {
+    const response = await apiClient.get('/api/permissions');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching permissions:', error);
+    throw error;
+  }
+};
+
 export const generateDownloadURL = async(hash) => {
   const response = await apiClient.get(`/api/generate-download-url/${hash}`)
 

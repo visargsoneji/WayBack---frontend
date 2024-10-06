@@ -1,129 +1,19 @@
-// import React, { useState, lazy, Suspense } from 'react';
-// import { TextField, Button, Switch, FormControlLabel, IconButton, Box } from '@mui/material';
-// import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-// import './SearchBar.css';
-
-// const CategorySelect = lazy(() => import('./CategorySelect'));
-
-// const SearchBar = ({ setCurrentPage, setSearchParams, searchParams }) => {
-//   const [query, setQuery] = useState('');
-//   const [packageName, setPackageName] = useState('');
-//   const [developerName, setDeveloperName] = useState('');
-//   const [categories, setCategories] = useState([]);
-//   const [downloadable, setDownloadable] = useState(true);
-//   const [showAdvanced, setShowAdvanced] = useState(false);
-
-//   const handleInputChange = (e) => {
-//     const { name, value } = e.target;
-//     if (name === 'query') setQuery(value);
-//     if (name === 'packageName') setPackageName(value);
-//     if (name === 'developerName') setDeveloperName(value);
-//   };
-
-//   const handleDownloadableChange = (e) => {
-//     setDownloadable(e.target.checked);
-//   };
-
-//   const handleSearch = async () => {
-//     const page = 1;
-//     setCurrentPage(page);
-
-//     const newParams = {};
-//     if (query) newParams.query = query;
-//     if (packageName) newParams.package_name = packageName;
-//     if (developerName) newParams.developer_name = developerName;
-//     if (categories.length > 0) newParams.categories = categories.join(',');
-//     newParams.downloadable = downloadable;
-//     newParams.page = page;
-
-//     setSearchParams(new URLSearchParams(newParams));
-//   };
-
-//   const handleKeyDown = (e) => {
-//     if (e.key === 'Enter') {
-//       handleSearch();
-//     }
-//   };
-
-//   const toggleAdvanced = () => {
-//     setShowAdvanced(!showAdvanced);
-//   };
-
-//   return (
-//     <Box className="search-bar">
-//       <Box display="flex" alignItems="center" mb={2}>
-//         <TextField
-//           id="query"
-//           name="query"
-//           label="APK Name"
-//           variant="standard"
-//           value={query}
-//           onChange={handleInputChange}
-//           onKeyDown={handleKeyDown}
-//         />
-//         <TextField
-//           id="packageName"
-//           name="packageName"
-//           label="Package Name"
-//           variant="standard"
-//           value={packageName}
-//           onChange={handleInputChange}
-//           onKeyDown={handleKeyDown}
-//           style={{ marginLeft: '15px' }}
-//         />
-//         <IconButton onClick={toggleAdvanced} style={{ marginLeft: '15px' }}>
-//           <ExpandMoreIcon />
-//         </IconButton>
-//         <Button
-//           variant="contained"
-//           onClick={handleSearch}
-//           style={{ marginLeft: '15px', backgroundColor: '#95cf00', color: '#fff' }}
-//         >
-//           Search
-//         </Button>
-        
-//       </Box>
-//       {showAdvanced && (
-//         <Box className="advanced-search" display="flex" flexDirection="column" alignItems="flex-start">
-//           <TextField
-//             id="developerName"
-//             name="developerName"
-//             label="Developer Name"
-//             variant="standard"
-//             value={developerName}
-//             onChange={handleInputChange}
-//             onKeyDown={handleKeyDown}
-//             style={{ marginBottom: '15px' }}
-//           />
-//           <Suspense fallback={<div>Loading...</div>}>
-//             <CategorySelect selectedCategories={categories} setSelectedCategories={setCategories} />
-//           </Suspense>
-//           <FormControlLabel
-//             control={<Switch checked={downloadable} onChange={handleDownloadableChange} />}
-//             label="Downloadable"
-//             style={{ marginBottom: '15px', alignSelf:"center"}}
-//           />
-//         </Box>
-//       )}
-//     </Box>
-//   );
-// };
-
-// export default SearchBar;
-
 import React, { useState, useEffect,lazy, Suspense } from 'react';
 import { TextField, Button, Switch, FormControlLabel, IconButton, Box, useMediaQuery } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import './SearchBar.css';
 import Joyride, { STATUS } from 'react-joyride';
+import { getCategories, getMaturityLevels, getPermissions } from '../api/app/endpoints';
 
-const CategorySelect = lazy(() => import('./CategorySelect'));
+const AutocompleteSelect = lazy(() => import('./AutoCompleteSelect'));
 
 const SearchBar = ({ setCurrentPage, setSearchParams, searchParams }) => {
   const [query, setQuery] = useState(searchParams.get('query') || '');
   const [packageName, setPackageName] = useState(searchParams.get('package_name') || '');
   const [developerName, setDeveloperName] = useState(searchParams.get('developer_name') || '');
   const [categories, setCategories] = useState(searchParams.get('categories') ? searchParams.get('categories').split(',') : []);
+  const [maturity, setMaturity] = useState(searchParams.get('maturity') ? searchParams.get('maturity').split(',') : []);
+  const [permissions, setPermissions] = useState(searchParams.get('permissions') ? searchParams.get('permissions').split(',') : []);
   const [downloadable, setDownloadable] = useState(searchParams.get('downloadable') === 'false' ? false : true);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [runTour, setRunTour] = useState(true);
@@ -170,6 +60,8 @@ const SearchBar = ({ setCurrentPage, setSearchParams, searchParams }) => {
     if (packageName) newParams.package_name = packageName;
     if (developerName) newParams.developer_name = developerName;
     if (categories.length > 0) newParams.categories = categories.join(',');
+    if (maturity.length > 0) newParams.maturity = maturity.join(',');
+    if (permissions.length > 0) newParams.permissions = permissions.join(',');
     newParams.downloadable = downloadable;
     newParams.page = page;
 
@@ -255,22 +147,53 @@ const SearchBar = ({ setCurrentPage, setSearchParams, searchParams }) => {
           // width="100%"
           mt={isSmallScreen ? 2 : 0} // Add margin on top for small screens
         >
-          <TextField
-            id="developerName"
-            name="developerName"
-            label="Developer Name"
-            variant="standard"
-            value={developerName}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            sx={{
-              width: isSmallScreen ? '100%' : '300px',
-              marginBottom: '15px'
-            }}
-          />
-          <Suspense fallback={<div>Loading...</div>}>
-            <CategorySelect sx={{marginBottom: '15px'}} selectedCategories={categories} setSelectedCategories={setCategories} />
-          </Suspense>
+          <Box display="flex" flexDirection="column">
+            <Box display="flex" flexDirection={isSmallScreen ? "column" : "row"}>
+            <Suspense fallback={<div>Loading...</div>}>
+              <AutocompleteSelect
+                label="Categories"
+                fetchOptions={getCategories}
+                selectedOptions={categories}
+                setSelectedOptions={setCategories}
+              />
+            </Suspense>
+            <Suspense fallback={<div>Loading...</div>}>
+              <AutocompleteSelect
+                label="Maturity"
+                fetchOptions={getMaturityLevels}
+                selectedOptions={maturity}
+                setSelectedOptions={setMaturity}
+              />
+            </Suspense>
+            </Box>
+            <Box display="flex" flexDirection={isSmallScreen ? "column" : "row"}>
+              <TextField
+                id="developerName"
+                name="developerName"
+                label="Developer Name"
+                variant="standard"
+                value={developerName}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                sx={{
+                  width: isSmallScreen ? '100%' : '280px',
+                  marginBottom: '15px',
+                  marginLeft: '-5px',
+                  marginRight: '45px',
+                  marginTop: '-10px'
+                }}
+              />
+              <Suspense fallback={<div>Loading...</div>}>
+              <AutocompleteSelect
+                label="Permissions"
+                fetchOptions={getPermissions}
+                selectedOptions={permissions}
+                setSelectedOptions={setPermissions}
+              />
+            </Suspense>
+            </Box>
+          </Box>
+          
           <FormControlLabel
             control={<Switch id="downloadable-switch" checked={downloadable} onChange={handleDownloadableChange} />}
             label="Downloadable"

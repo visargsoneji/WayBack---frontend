@@ -61,18 +61,22 @@ const AppTimeline = ({ details, versions }) => {
       </Typography>
       <Divider />
       <Grid container spacing={2} textAlign="center" style={{ margin: "0.5px", marginBottom: "10px" }}>
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <Typography sx={{ fontFamily: "Ubuntu", fontSize: "12px" }}>DEVELOPER</Typography>
           <Typography sx={{ fontFamily: "Ubuntu" }} variant="body1"><strong>{details.developer_id}</strong></Typography>
         </Grid>
         <Divider orientation="vertical" flexItem style={{ margin: "5px" }} />
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <Typography sx={{ fontFamily: "Ubuntu", fontSize: "12px" }}>CATEGORY</Typography>
           <Typography sx={{ fontFamily: "Ubuntu" }} variant="body1"><strong>{details.categories.join(" - ")}</strong></Typography>
         </Grid>
         <Divider orientation="vertical" flexItem style={{ margin: "5px" }} />
-        <Grid item xs={3.6}>
-          {/* <Typography sx={{ fontFamily: "Ubuntu", fontSize: "12px" }}>SHARE WITH FRIENDS</Typography> */}
+        <Grid item xs={3}>
+          <Typography sx={{ fontFamily: "Ubuntu", fontSize: "12px" }}>MATURITY</Typography>
+          <Typography sx={{ fontFamily: "Ubuntu" }} variant="body1"><strong>{details.maturity.join(" - ")}</strong></Typography>
+        </Grid>
+        <Divider orientation="vertical" flexItem style={{ margin: "5px" }} />
+        <Grid item xs={2.6}>
           <Typography sx={{ fontFamily: "Ubuntu" }} variant="body1">
             <a href={`/search/details?app_id=${details.app_id}`} target="_blank" rel="noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
             <img src={shareIcon} alt="Share Icon" style={{ width: '30px', height: '30px'}} />
