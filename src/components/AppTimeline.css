@@ -1,0 +1,23 @@
+.vertical-timeline-element-title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0 0;
+    height: auto;
+
+  }
+  
+  .version-title {
+    line-height: 0.3; /* Adjust line height to reduce space around text */
+    vertical-align: text-top;
+  }
+  .sdk-info {
+    font-size: 0.85em; /* Smaller font for SDK info */
+    color: #555; /* Optional: subtle color for SDK */
+    text-align: right; /* Align text to the right */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center align vertically within sdk-info */
+    line-height: 1.2;
+    vertical-align: text-bottom;
+  }

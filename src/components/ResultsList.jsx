@@ -76,13 +76,16 @@ const ResultsList = ({ results, isLoading }) => {
               <div>
                 <Skeleton variant="rounded" height={100} style={{ margin: '10px 0' }} />
                 <Grid container spacing={2}>
-                  <Grid item xs={4}>
+                  <Grid item xs={3}>
                     <Skeleton variant="rectangular" width="100%" height={70} sx={{ borderRadius: 1 }} />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={3}>
                     <Skeleton variant="rectangular" width="100%" height={70} sx={{ borderRadius: 1 }} />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={3}>
+                    <Skeleton variant="rectangular" width="100%" height={70} sx={{ borderRadius: 1 }} />
+                  </Grid>
+                  <Grid item xs={3}>
                     <Skeleton variant="rectangular" width="100%" height={70} sx={{ borderRadius: 1 }} />
                   </Grid>
                 </Grid>

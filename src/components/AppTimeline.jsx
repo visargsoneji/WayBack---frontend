@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Container, Typography, Grid, Divider, CircularProgress } from '@mui/material';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
+import './AppTimeline.css'
 import CustomIcon from '../assets/android-color.svg';
 import ReadMore from './ReadMore';
 import ReadMore2 from './ReadMore2';
@@ -98,7 +99,14 @@ const AppTimeline = ({ details, versions }) => {
                 contentStyle={{ background: '#95cf00', color: '#000', wordWrap: 'break-word', fontFamily: 'Ubuntu' }}
                 contentArrowStyle={{ borderRight: '7px solid  #95cf00' }}
               >
-                <h3 className="vertical-timeline-element-title">v {version.version}</h3><br></br>
+                {/* <h3 className="vertical-timeline-element-title">v {version.version}</h3><br></br> */}
+                <div className="vertical-timeline-element-title-container">
+                  <h3 className='version-title'>v {version.version}</h3>
+                  <div className="sdk-info"> 
+                    {version.min_sdk ? <div>Min SDK: {version.min_sdk}</div> : <p></p>}
+                    {version.target_sdk ? <div>Target SDK: {version.target_sdk}</div> : <p></p> }
+                  </div>
+                </div>
                 <Divider />
                 <Grid container spacing={1} textAlign="center" style={{ margin: "0.5px", marginBottom: "10px", paddingTop: "5px" }}>
                   <Grid item xs={3.6}>
