@@ -180,7 +180,7 @@ const SearchBar = ({ setCurrentPage, setSearchParams, searchParams }) => {
                   marginBottom: '15px',
                   marginLeft: '-5px',
                   marginRight: '45px',
-                  marginTop: '-10px'
+                  marginTop: '-12px'
                 }}
               />
               <Suspense fallback={<div>Loading...</div>}>
