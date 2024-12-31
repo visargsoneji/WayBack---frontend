@@ -31,6 +31,7 @@ const SearchPage = () => {
       setSearchExecuted(false);
       setCurrentPage(page);
       setSearchParams({
+        keyword: searchParams.get('keyword') || '',
         query: searchParams.get('query') || '',
         package_name: searchParams.get('package_name') || '',
         developer_name: searchParams.get('developer_name') || '',
@@ -76,12 +77,13 @@ const SearchPage = () => {
           categories: searchParams.get('categories') || '',
           maturity: searchParams.get('maturity') || '',
           permissions: searchParams.get('permissions') || '',
+          keyword: searchParams.get('keyword') || '',
           downloadable: searchParams.get('downloadable') || 'true',
           page: parseInt(searchParams.get('page')) || 1
         };
         if (JSON.stringify(prevParamsRef.current) !== JSON.stringify(params)) {
           prevParamsRef.current = params;
-          if (params.query || params.package_name || params.developer_name || params.categories || params.maturity || params.permissions) {
+          if (params.keyword || params.query || params.package_name || params.developer_name || params.categories || params.maturity || params.permissions) {
             handleSearch(params);
           } else {
             setSearchExecuted(false);

@@ -3,17 +3,18 @@ import { TextField, Button, Switch, FormControlLabel, IconButton, Box, useMediaQ
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import './SearchBar.css';
 import Joyride, { STATUS } from 'react-joyride';
-import { getCategories, getMaturityLevels, getPermissions } from '../api/app/endpoints';
+import { getCategories, getMaturityLevels } from '../api/app/endpoints';
 
 const AutocompleteSelect = lazy(() => import('./AutoCompleteSelect'));
 
 const SearchBar = ({ setCurrentPage, setSearchParams, searchParams }) => {
+  const [keyword, setKeyword] = useState(searchParams.get('keyword') || '');
   const [query, setQuery] = useState(searchParams.get('query') || '');
   const [packageName, setPackageName] = useState(searchParams.get('package_name') || '');
   const [developerName, setDeveloperName] = useState(searchParams.get('developer_name') || '');
   const [categories, setCategories] = useState(searchParams.get('categories') ? searchParams.get('categories').split(',') : []);
   const [maturity, setMaturity] = useState(searchParams.get('maturity') ? searchParams.get('maturity').split(',') : []);
-  const [permissions, setPermissions] = useState(searchParams.get('permissions') ? searchParams.get('permissions').split(',') : []);
+  const [permissions, setPermissions] = useState(searchParams.get('permissions') || '');
   const [downloadable, setDownloadable] = useState(searchParams.get('downloadable') === 'false' ? false : true);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [runTour, setRunTour] = useState(true);
@@ -45,6 +46,8 @@ const SearchBar = ({ setCurrentPage, setSearchParams, searchParams }) => {
     if (name === 'query') setQuery(value);
     if (name === 'packageName') setPackageName(value);
     if (name === 'developerName') setDeveloperName(value);
+    if (name === 'keyword') setKeyword(value)
+    if (name === 'permissions') setPermissions(value)
   };
 
   const handleDownloadableChange = (e) => {
@@ -61,7 +64,9 @@ const SearchBar = ({ setCurrentPage, setSearchParams, searchParams }) => {
     if (developerName) newParams.developer_name = developerName;
     if (categories.length > 0) newParams.categories = categories.join(',');
     if (maturity.length > 0) newParams.maturity = maturity.join(',');
-    if (permissions.length > 0) newParams.permissions = permissions.join(',');
+    if (permissions) newParams.permissions = permissions;
+    if (keyword) newParams.keyword = keyword;
+
     newParams.downloadable = downloadable;
     newParams.page = page;
 
@@ -115,25 +120,16 @@ const SearchBar = ({ setCurrentPage, setSearchParams, searchParams }) => {
       />
       <Box display="flex" flexDirection={isSmallScreen ? 'column' : 'row'} alignItems="center" mb={2}>
         <TextField
-          id="query"
-          name="query"
-          label="APK Name"
+          id="keyword"
+          name="keyword"
+          label="Keyword Search"
           variant="standard"
-          value={query}
+          value={keyword}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          sx={{ width: isSmallScreen ? '100%' : 'auto', mb: isSmallScreen ? 2 : 0 }}
+          sx={{ width: isSmallScreen ? '100%' : 'auto', mb: isSmallScreen ? 2 : 0}}
         />
-        <TextField
-          id="packageName"
-          name="packageName"
-          label="Package Name"
-          variant="standard"
-          value={packageName}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          sx={{ width: isSmallScreen ? '100%' : 'auto', mb: isSmallScreen ? 2 : 0, ml: isSmallScreen ? 0 : '15px' }}
-        />
+       
         <IconButton id="expand-advanced-search" onClick={toggleAdvanced} sx={{ ml: isSmallScreen ? 0 : '15px', mb: isSmallScreen ? 2 : 0 }}>
           <ExpandMoreIcon />
         </IconButton>
@@ -147,7 +143,71 @@ const SearchBar = ({ setCurrentPage, setSearchParams, searchParams }) => {
           // width="100%"
           mt={isSmallScreen ? 2 : 0} // Add margin on top for small screens
         >
+          <Box display="flex" flexDirection={isSmallScreen ? "column" : "row"}>
+            <TextField
+              id="query"
+              name="query"
+              label="APK Name"
+              variant="standard"
+              value={query}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              sx={{
+                width: isSmallScreen ? '100%' : '280px',
+                marginBottom: '15px',
+                marginLeft: '-5px',
+                marginRight: '45px',
+              }}
+            />
+            <TextField
+              id="packageName"
+              name="packageName"
+              label="Package Name"
+              variant="standard"
+              value={packageName}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              sx={{
+                width: isSmallScreen ? '100%' : '280px',
+                marginBottom: '15px',
+                marginLeft: '-5px',
+                marginRight: '45px',
+              }}
+            />
+          </Box>
           <Box display="flex" flexDirection="column">
+            <Box display="flex" flexDirection={isSmallScreen ? "column" : "row"}>
+              <TextField
+                id="developerName"
+                name="developerName"
+                label="Developer Name"
+                variant="standard"
+                value={developerName}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                sx={{
+                  width: isSmallScreen ? '100%' : '280px',
+                  marginBottom: '15px',
+                  marginLeft: '-5px',
+                  marginRight: '45px',
+                }}
+              />
+              <TextField
+                id="permissions"
+                name="permissions"
+                label="Permissions"
+                variant="standard"
+                value={permissions}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                sx={{
+                  width: isSmallScreen ? '100%' : '280px',
+                  marginBottom: '15px',
+                  marginLeft: '-5px',
+                  marginRight: '45px',
+                }}
+              />
+            </Box>
             <Box display="flex" flexDirection={isSmallScreen ? "column" : "row"}>
             <Suspense fallback={<div>Loading...</div>}>
               <AutocompleteSelect
@@ -163,32 +223,6 @@ const SearchBar = ({ setCurrentPage, setSearchParams, searchParams }) => {
                 fetchOptions={getMaturityLevels}
                 selectedOptions={maturity}
                 setSelectedOptions={setMaturity}
-              />
-            </Suspense>
-            </Box>
-            <Box display="flex" flexDirection={isSmallScreen ? "column" : "row"}>
-              <TextField
-                id="developerName"
-                name="developerName"
-                label="Developer Name"
-                variant="standard"
-                value={developerName}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyDown}
-                sx={{
-                  width: isSmallScreen ? '100%' : '280px',
-                  marginBottom: '15px',
-                  marginLeft: '-5px',
-                  marginRight: '45px',
-                  marginTop: '-12px'
-                }}
-              />
-              <Suspense fallback={<div>Loading...</div>}>
-              <AutocompleteSelect
-                label="Permissions"
-                fetchOptions={getPermissions}
-                selectedOptions={permissions}
-                setSelectedOptions={setPermissions}
               />
             </Suspense>
             </Box>

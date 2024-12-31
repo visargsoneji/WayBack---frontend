@@ -54,7 +54,7 @@ const ResultsList = ({ results, isLoading }) => {
     return (
       <div className="results-list">
         {Array.from(new Array(20)).map((_, index) => (
-          <Skeleton variant="rounded" height={50} key={index} style={{ margin: '10px 0' }} />
+          <Skeleton animation="wave" variant="rounded" height={50} key={index} style={{ margin: '10px 0' }} />
         ))}
       </div>
     );
@@ -74,7 +74,7 @@ const ResultsList = ({ results, isLoading }) => {
           <AccordionDetails>
             {loading[result.app_id] ? (
               <div>
-                <Skeleton variant="rounded" height={100} style={{ margin: '10px 0' }} />
+                <Skeleton animation="wave" variant="rounded" height={100} style={{ margin: '10px 0' }} />
                 <Grid container spacing={2}>
                   <Grid item xs={3}>
                     <Skeleton variant="rectangular" width="100%" height={70} sx={{ borderRadius: 1 }} />
