@@ -56,12 +56,10 @@ const SearchPage = () => {
         try {
           const { searchResults, totalResults } = await getSearchResults(params, limit);
           handleSearchResults(searchResults, totalResults);
-          // const response = await axios.get('http://localhost:8000/api/search', {
-          //   params: { ...params, limit }
-          // });
-          // handleSearchResults(response.data, parseInt(response.headers['x-total-count']));
-           // Adjust according to your API response
         } catch (error) {
+          if (error.response && error.response.status === 400) {
+            alert('Bad Request: Please check your search parameters and try again. Visit FAQs to understand more!');
+          } 
           console.error('Error fetching search results:', error);
         } finally {
           setIsLoading(false);

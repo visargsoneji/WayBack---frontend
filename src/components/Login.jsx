@@ -82,6 +82,10 @@ const Login = ({ setIsLoggedIn }) => {
       try {
         await register(email, firstName, lastName, password)
         alert('User registered successfully');
+        const data = await login(email, password);
+        localStorage.setItem('token', data.access_token);
+        setIsLoggedIn(true);
+        window.location.href = '/faq';
       } catch (error) {
         console.error('Error registering user:', error);
         alert(error.response.data.detail);

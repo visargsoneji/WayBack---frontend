@@ -16,18 +16,20 @@ const FAQ = () => {
           Frequently Asked Questions
         </Typography>
         {faqData.map((faq, index) => (
-          <Accordion key={index}>
+          <Accordion key={index} sx={{ mb: 2 }}>
             <AccordionSummary
-              expandIcon={<ExpandMoreIcon/>}
+              expandIcon={<ExpandMoreIcon />}
               aria-controls={`panel${index}-content`}
               id={`panel${index}-header`}
+              sx={{ backgroundColor: 'ButtonShadow' }}
             >
-              <Typography sx={{ fontFamily: 'Ubuntu' }}>{faq.question}</Typography>
+              <Typography sx={{ fontFamily: 'Ubuntu'}}>{faq.question}</Typography>
             </AccordionSummary>
-            <AccordionDetails sx={{backgroundColor: '#95cf00'}}>
-              <Typography sx={{ fontFamily: 'Ubuntu', color: '#000' }}>
-                {faq.answer}
-              </Typography>
+            <AccordionDetails sx={{ backgroundColor: '#95cf00' }}>
+            <Typography
+              sx={{ fontFamily: 'Ubuntu', whiteSpace: 'pre-line' }}
+              dangerouslySetInnerHTML={{ __html: faq.answer }}
+            />
             </AccordionDetails>
           </Accordion>
         ))}

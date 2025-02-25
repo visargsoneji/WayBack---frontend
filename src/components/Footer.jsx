@@ -1,6 +1,6 @@
 // src/components/Footer.js
 import React from 'react';
-import { Container, Typography, Box } from '@mui/material';
+import { Container, Typography, Box, Link } from '@mui/material';
 
 const Footer = () => {
   return (
@@ -18,7 +18,17 @@ const Footer = () => {
     >
       <Container maxWidth="lg">
         <Typography variant="body1">
-          &copy; 2024 SEFCOM
+          &copy; 2025{' '}
+          <Link 
+            href="https://sefcom.asu.edu/" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            color="inherit"
+            underline="always"
+          >
+            SEFCOM
+          </Link>
+           
         </Typography>
       </Container>
     </Box>
