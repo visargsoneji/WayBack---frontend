@@ -309,7 +309,7 @@ const Header = ({isLoggedIn, setIsLoggedIn}) => {
               <>
                 <Tooltip title="Settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <AccountCircle sx={{ display: { xs: 'none', md: 'flex' }, mr: 2, color: '#95cf00', fontSize: '30px'}} />
+                  <AccountCircle sx={{ display: 'flex', mr: 2, color: '#95cf00', fontSize: '30px' }} />
                   </IconButton>
                 </Tooltip>
                 <Menu
